@@ -1,6 +1,5 @@
 package com.jorged.almacen.mapper;
 
-import com.jorged.almacen.dto.sucursales.SucursalResponse;
 import com.jorged.almacen.dto.ventas.*;
 import com.jorged.almacen.entities.DetalleVenta;
 import com.jorged.almacen.entities.Producto;
@@ -11,10 +10,15 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 public class VentaMapper {
+    private final SucursalMapper sucursalMapper;
+
+    public VentaMapper(SucursalMapper sucursalMapper) {
+        this.sucursalMapper = sucursalMapper;
+    }
+
     public Venta requestAEntidadVenta(VentaRequest request, EstadoVenta estadoVenta, Sucursal sucursal){
         if (request==null||sucursal==null)return null;
 
@@ -25,15 +29,15 @@ public class VentaMapper {
                 .build();
     }
 
-    public VentaResponse entidadAResponseVenta(Venta venta, List<DetalleVentaResponse> detalles, SucursalResponse sucursalResponse, BigDecimal total){
-        if (venta==null||detalles==null||sucursalResponse==null) return null;
+    public VentaResponse entidadAResponseVenta(Venta venta, Sucursal sucursal, BigDecimal total){
+        if (venta==null||sucursal==null) return null;
 
         return new VentaResponse(
                 venta.getId(),
                 venta.getFecha().toString(),
                 venta.getEstadoVenta().getDescripcion(),
-                sucursalResponse,
-                detalles, total);
+                sucursalMapper.entidadAResponse(sucursal),
+                venta.getDetalleVentas().stream().map(this::entidadAResponseDetalle).toList(), total);
     }
     public DetalleVenta requestAEntidadDetalle(DetalleVentaRequest request, Producto producto, Venta venta){
         if (request==null || producto==null || venta ==null) return null;
