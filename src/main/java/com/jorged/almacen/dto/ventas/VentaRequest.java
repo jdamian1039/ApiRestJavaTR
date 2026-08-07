@@ -11,7 +11,6 @@ public record VentaRequest(
         @NotNull(message = "Id de producto requerido")
         @Positive(message = "Id de producto debe ser positivo")
         Long idSucursal,
-
         @NotEmpty(message = "Lista de productos requerida. No debe estar vacía")
         List<@Valid DetalleVentaRequest> productos
 ) {

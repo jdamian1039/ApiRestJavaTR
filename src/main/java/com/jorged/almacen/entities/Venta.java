@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,23 @@ public class Venta {
         this.detalleVentas.add(detalleVenta);
     }
 
-    private void cancelar(){
+    public Boolean validarVentaRegistrada(){
+        return this.estadoVenta==EstadoVenta.REGISTRADA;
+    }
+
+    public Boolean validarVentaCancelada(){
+        return this.estadoVenta==EstadoVenta.CANCELADA;
+    }
+
+    public BigDecimal obtenerTotal(){
+        return this.detalleVentas.stream().map(DetalleVenta::obtenerSubtotal).reduce(BigDecimal.valueOf(0),BigDecimal::add);
+    }
+
+    public Integer obtenerCantidad(){
+        return this.detalleVentas.stream().map(DetalleVenta::getCantidadProducto).reduce(0,Integer::sum);
+    }
+
+    public void cancelar(){
         if (this.estadoVenta==EstadoVenta.CANCELADA)
             throw new IllegalArgumentException("La venta ya esta cancelada");
         this.estadoVenta=EstadoVenta.CANCELADA;

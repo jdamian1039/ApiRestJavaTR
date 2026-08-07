@@ -20,7 +20,7 @@ public enum EstadoVenta {
         StringCustomUtils.validarNoVacio(descripcion, "La descripción es requerida");
         String descripcionNorm = StringCustomUtils.quitarAcentos(descripcion);
         for (EstadoVenta estado: values()){
-            if (StringCustomUtils.quitarAcentos(estado.descripcion).equalsIgnoreCase(descripcionNorm))
+            if (StringCustomUtils.quitarAcentos(estado.descripcion.toLowerCase()).equalsIgnoreCase(descripcionNorm.toLowerCase()))
                 return estado;
         }
         throw new RecursoNoEncontradoException("No existe categoria con la descripción:" + descripcion);
