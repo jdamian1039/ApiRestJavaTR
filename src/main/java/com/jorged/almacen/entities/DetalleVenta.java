@@ -33,4 +33,8 @@ public class DetalleVenta {
 
     @Column(name = "PRECIO_PRODUCTO", nullable = false)
     private BigDecimal precioProducto;
+
+    public BigDecimal obtenerSubtotal(){
+        return this.precioProducto.multiply(BigDecimal.valueOf(this.cantidadProducto));
+    }
 }

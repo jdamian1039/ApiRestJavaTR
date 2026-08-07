@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,9 +28,14 @@ public class ProductoServiceImp implements ProductoService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductoResponse> listar(String nombre, String categoria, BigDecimal precioMin, BigDecimal precioMax) {
-        return productoRepository.findAll().stream().map(productoMapper::entidadAResponse).toList();
-        // return .map(producto - productoMapper.entidadAResponse(producto))
+    public List<ProductoResponse> listar(String nombre,String categoria, BigDecimal precioMin, BigDecimal precioMax) {
+        log.info("Filtrando productos por nombre: {}, categoria: {}, precioMin: {}, precioMax: {}",
+                nombre, categoria, precioMin, precioMax);
+        log.info("Listando todos los productos");
+        return productoRepository.busquedaPorParametros(nombre, categoria, precioMin, precioMax).stream()
+                .map(productoMapper::entidadAResponse).toList();
+
+        // return productoRepository.findAll().stream().map(productoMapper::entidadAResponse).toList();
     }
 
     @Override
